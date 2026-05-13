@@ -8,8 +8,8 @@ const char *ssid = "InovaIndustria";
 const char *password = "industria50";
 const char *hostName = KIT_HOSTNAME;
 
-void test(std::string str){
-  wserial::println(str.c_str());  
+void receivedFunc(std::string str){
+  wserial.println(str.c_str());  
 }
 
 void setup() {
@@ -19,7 +19,7 @@ void setup() {
 
   // Tenta listen até conseguir
   wserial.begin(115200, 47268UL);
-  wserial.onInputReceived(test);
+  wserial.onInputReceived(receivedFunc);
   wserial.println("[IP] is " + String(WiFi.localIP().toString()));
 
   if (!MDNS.begin(hostName)) wserial.println("[mDNS] begin failed");
