@@ -4,7 +4,7 @@
 #include <WebServer.h>
 #include "services\wserial.h"
 
-const char *hostName = "esp32name";
+const char *hostName = KIT_HOSTNAME;
 const char *apSsid = "ESP32-Roteador";
 const char *apPassword = "12345678";
 
@@ -101,7 +101,7 @@ void setup() {
   WiFi.softAP(apSsid, apPassword);
 
   wserial.begin(115200, 47268UL);
-  wserial.onInputReceived([](std::string str) { wserial::println(str.c_str()); });
+  wserial.onInputReceived([](std::string str) { wserial.println(str.c_str()); });
 
   wserial.println("[AP] rede: " + String(apSsid));
   wserial.println("[AP] senha: " + String(apPassword));
