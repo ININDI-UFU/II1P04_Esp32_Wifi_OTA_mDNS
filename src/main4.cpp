@@ -1,7 +1,8 @@
+#include <Arduino.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WebServer.h>
-#include "wserial.h"
+#include "services\wserial.h"
 
 const char *hostName = "esp32name";
 const char *apSsid = "ESP32-Roteador";
@@ -99,26 +100,26 @@ void setup() {
   WiFi.mode(WIFI_AP);
   WiFi.softAP(apSsid, apPassword);
 
-  wserial::setup(115200, 47268UL);
-  wserial::onInputReceived([](std::string str) { wserial::println(str.c_str()); });
+  wserial.begin(115200, 47268UL);
+  wserial.onInputReceived([](std::string str) { wserial::println(str.c_str()); });
 
-  wserial::println("[AP] rede: " + String(apSsid));
-  wserial::println("[AP] senha: " + String(apPassword));
-  wserial::println("[IP] is " + WiFi.softAPIP().toString());
+  wserial.println("[AP] rede: " + String(apSsid));
+  wserial.println("[AP] senha: " + String(apPassword));
+  wserial.println("[IP] is " + WiFi.softAPIP().toString());
 
   if (MDNS.begin(hostName)) {
     MDNS.addService("http", "tcp", 80);
-    wserial::println("[mDNS] acesse http://" + String(hostName) + ".local/");
+    wserial.println("[mDNS] acesse http://" + String(hostName) + ".local/");
   } else {
-    wserial::println("[mDNS] falhou");
+    wserial.println("[mDNS] falhou");
   }
 
   server.on("/", paginaInicial);
   server.begin();
-  wserial::println("[HTTP] servidor iniciado");
+  wserial.println("[HTTP] servidor iniciado");
 }
 
 void loop() {
   server.handleClient();
-  wserial::loop();
+  wserial.update();
 }
